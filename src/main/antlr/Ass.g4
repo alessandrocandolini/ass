@@ -1,4 +1,4 @@
-grammar ass;
+grammar Ass;
 
 program: variable* EOF;
 variable: (strvar|intvar|boolvar|decimalvar) EOL;
