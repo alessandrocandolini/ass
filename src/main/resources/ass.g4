@@ -1,28 +1,32 @@
 grammar ass;
 
-program: variable+ EOF;
-variable: strvar|intvar|boolvar|decimalvar;
-vardef: IDENTIFIER TYPESPEC;
-strvar: vardef 'String''?'? (DEFAULT STRING_VALUE)? (OPTS STRING_VALUE_LIST)? EOL;
-intvar: vardef 'Number''?'? (DEFAULT NUMBER_VALUE)? (OPTS NUMBER_VALUE_LIST)? EOL;
-decimalvar: vardef 'Decimal''?'? (DEFAULT DECIMAL_VALUE)? (OPTS DECIMAL_VALUE_LIST)? EOL;
-boolvar: vardef 'Boolean''?'? (DEFAULT BOOL_VALUE)? EOL;
+program: variable* EOF;
+variable: (strvar|intvar|boolvar|decimalvar) EOL;
+strvar: IDENTIFIER TYPESPEC TYPE_STRING (DEFAULT STRING_VALUE)? (OPTS STRING_VALUE_LIST)?;
+intvar: IDENTIFIER TYPESPEC TYPE_NUMBER (DEFAULT NUMBER_VALUE)? (OPTS NUMBER_VALUE_LIST)?;
+decimalvar: IDENTIFIER TYPESPEC TYPE_DECIMAL (DEFAULT DECIMAL_VALUE)? (OPTS DECIMAL_VALUE_LIST)?;
+boolvar: IDENTIFIER TYPESPEC TYPE_BOOLEAN (DEFAULT BOOL_VALUE)?;
 
-IDENTIFIER : [a-z_][A-Za-z0-9_]*;
 TYPESPEC: ':';
 OPTS: 'in';
 DEFAULT: 'default';
-EOL: ';';
+EOL: (';'|'\n')+;
+IDENTIFIER : [a-z_][A-Za-z0-9_]*;
+
+TYPE_STRING: 'String'|'String?';
+TYPE_NUMBER: 'Number'|'Number?';
+TYPE_BOOLEAN: 'Boolean'|'Boolean?';
+TYPE_DECIMAL: 'Decimal'|'Decimal?';
 
 NUMBER_VALUE: [0-9]+;
 NUMBER_VALUE_LIST: '['NUMBER_VALUE(','NUMBER_VALUE)*']';
 
-BOOL_VALUE: 'true'|'false';
 DECIMAL_VALUE: [0-9]+'.'[0-9]+;
 DECIMAL_VALUE_LIST: '['DECIMAL_VALUE(','DECIMAL_VALUE)*']';
 
 STRING_VALUE: '"' (~'"')*? '"'  ;
 STRING_VALUE_LIST: '['STRING_VALUE(','STRING_VALUE)*']';
 
+BOOL_VALUE: 'true'|'false';
 
 WS: [ \r\n\t]+ -> skip;
