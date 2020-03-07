@@ -1,80 +1,8 @@
 package org.ass
 
 import AssBaseVisitor
-import AssLexer
 import AssParser
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
 import java.lang.IllegalArgumentException
-
-fun main() {
-
-    val textToParse = """
-        orfeo: Number default 12 in [0,10,20];
-        orfeo: Boolean default true;
-        orfeo: Decimal default 2.0 in [0.0,1.0,2.0];
-        orfeo: String default "Orfeo" in ["Orfeo","Alessandro"];
-        """.trim()
-    val charStream = CharStreams.fromString(textToParse)
-    val lexer = AssLexer(charStream)
-    val tokens = CommonTokenStream(lexer)
-    val parser = AssParser(tokens)
-    val visitor = AssVisitorImpl()
-    println("Parsing \"$textToParse\"...")
-    val value = visitor.visit(parser.stat())
-    println("Parsed $value")
-}
-
-sealed class AssObject {
-
-    data class Stat(
-        val variables: List<Variable>
-    ) : AssObject()
-
-    sealed class Variable : AssObject() {
-
-        data class StringVar(
-            val name: String,
-            val isNullable: Boolean,
-            val default: String?,
-            val options: List<String>?
-        ) : Variable()
-
-        data class NumberVar(
-            val name: String,
-            val isNullable: Boolean,
-            val default: Int?,
-            val options: List<Int>?
-        ) : Variable()
-
-        data class DecimalVar(
-            val name: String,
-            val isNullable: Boolean,
-            val defaults: Double?,
-            val options: List<Double>?
-        ) : Variable()
-
-        data class BooleanVar(
-            val name: String,
-            val isNullable: Boolean,
-            val default: Boolean?
-        ) : Variable()
-
-    }
-
-    data class StringValueList(
-        val values: List<String>
-    ) : AssObject()
-
-    data class NumberValueList(
-        val values: List<Int>
-    ) : AssObject()
-
-    data class DecimalValueList(
-        val values: List<Double>
-    ) : AssObject()
-
-}
 
 class AssVisitorImpl : AssBaseVisitor<AssObject>() {
 
