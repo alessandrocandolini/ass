@@ -34,6 +34,10 @@ class AssVisitorImpl : AssBaseVisitor<List<Variable>>() {
         return variables.toList()
     }
 
+    override fun visitVariable(ctx: AssParser.VariableContext?): List<Variable> {
+        return super.visitVariable(ctx)
+    }
+
     override fun visitStrvar(ctx: AssParser.StrvarContext): List<Variable> {
         println("start visitStrvar")
         //TODO replace uppercase with lowercase to obtain the right rule
@@ -52,5 +56,17 @@ class AssVisitorImpl : AssBaseVisitor<List<Variable>>() {
         variables.add(stringvar)
         println("end visitStrvar")
         return variables
+    }
+
+    override fun visitIntvar(ctx: AssParser.IntvarContext?): List<Variable> {
+        return super.visitIntvar(ctx)
+    }
+
+    override fun visitDecimalvar(ctx: AssParser.DecimalvarContext?): List<Variable> {
+        return super.visitDecimalvar(ctx)
+    }
+
+    override fun visitBoolvar(ctx: AssParser.BoolvarContext?): List<Variable> {
+        return super.visitBoolvar(ctx)
     }
 }

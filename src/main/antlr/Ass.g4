@@ -7,12 +7,6 @@ intvar: IDENTIFIER TYPESPEC TYPE_NUMBER (DEFAULT NUMBER_VALUE)? (OPTS NUMBER_VAL
 decimalvar: IDENTIFIER TYPESPEC TYPE_DECIMAL (DEFAULT DECIMAL_VALUE)? (OPTS DECIMAL_VALUE_LIST)?;
 boolvar: IDENTIFIER TYPESPEC TYPE_BOOLEAN (DEFAULT BOOL_VALUE)?;
 
-TYPESPEC: ':';
-OPTS: 'in';
-DEFAULT: 'default';
-EOL: (';'|'\n')+;
-IDENTIFIER : [a-z_][A-Za-z0-9_]*;
-
 TYPE_STRING: 'String'|'String?';
 TYPE_NUMBER: 'Number'|'Number?';
 TYPE_BOOLEAN: 'Boolean'|'Boolean?';
@@ -24,9 +18,15 @@ NUMBER_VALUE_LIST: '['NUMBER_VALUE(','NUMBER_VALUE)*']';
 DECIMAL_VALUE: [0-9]+'.'[0-9]+;
 DECIMAL_VALUE_LIST: '['DECIMAL_VALUE(','DECIMAL_VALUE)*']';
 
+BOOL_VALUE: 'true'|'false';
+
 STRING_VALUE: '"' (~'"')*? '"'  ;
 STRING_VALUE_LIST: '['STRING_VALUE(','STRING_VALUE)*']';
 
-BOOL_VALUE: 'true'|'false';
+TYPESPEC: ':';
+OPTS: 'in';
+DEFAULT: 'default';
+EOL: (';'|'\n')+;
+IDENTIFIER : [a-z_][A-Za-z0-9_]*;
 
 WS: [ \r\n\t]+ -> skip;
