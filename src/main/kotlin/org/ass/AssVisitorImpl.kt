@@ -9,19 +9,19 @@ class AssVisitorImpl : AssBaseVisitor<AssObject>() {
     override fun visitStat(ctx: AssParser.StatContext): AssObject.Stat {
         return AssObject.Stat(
             visitEndpoint(ctx.endpoint()),
-            visitGet(ctx.get()),
-            visitHead(ctx.head()),
-            visitPost(ctx.post()),
-            visitPut(ctx.put()),
-            visitDelete(ctx.delete()),
-            visitPatch(ctx.patch()),
-            visitOption(ctx.option())
+            ctx.get()?.let { visitGet(it) },
+            ctx.head()?.let { visitHead(it) },
+            ctx.post()?.let { visitPost(it) },
+            ctx.put()?.let { visitPut(it) },
+            ctx.delete()?.let { visitDelete(it) },
+            ctx.patch()?.let { visitPatch(it) },
+            ctx.option()?.let { visitOption(it) }
         )
     }
 
     override fun visitEndpoint(ctx: AssParser.EndpointContext): AssObject.Endpoint {
         //TODO this is pure shit
-        return AssObject.Endpoint(ctx.text.replace("\"", ""))
+        return AssObject.Endpoint(ctx.STRING_VALUE().text.replace("\"", ""))
     }
 
     override fun visitGet(ctx: AssParser.GetContext): AssObject.Method.Get {
@@ -67,8 +67,8 @@ class AssVisitorImpl : AssBaseVisitor<AssObject>() {
     }
 
     override fun visitRequest(ctx: AssParser.RequestContext): AssObject.Request {
-        val headers = visitHeaders(ctx.headers())
-        val query = visitQueries(ctx.queries())
+        val headers = ctx.headers()?.let { visitHeaders(it) }
+        val query = ctx.queries()?.let { visitQueries(it) }
         return AssObject.Request(headers, query)
     }
 

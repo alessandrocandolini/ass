@@ -47,6 +47,6 @@ stringValueList: '['STRING_VALUE(','STRING_VALUE)*']';
 
 OPTS: 'in';
 DEFAULT: 'default';
-IDENTIFIER : [a-z_][A-Za-z0-9_]*;
+IDENTIFIER : [a-z_][A-Za-z0-9_-]*;
 
 WS: [ \r\n\t]+ -> skip;
