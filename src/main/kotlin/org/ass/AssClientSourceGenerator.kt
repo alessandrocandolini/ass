@@ -42,39 +42,56 @@ class AssClientSourceGenerator {
         val file = FileSpec.builder("", "Client")
             .addImport("io.ktor.client", "HttpClient")
             .addImport("io.ktor.client.request", "get", "header", "parameter")
-            .addType(
-                TypeSpec.classBuilder("Client")
-                    .primaryConstructor(
-                        FunSpec.constructorBuilder()
-                            .addParameter("client", ClassName("", "HttpClient"))
-                            .build()
-                    )
-                    .addProperty(
-                        PropertySpec.builder("client", ClassName("", "HttpClient"))
-                            .initializer("client")
-                            .addModifiers(KModifier.PRIVATE)
-                            .build()
-                    )
-                    .addFunction(
-                        FunSpec.builder("get")
-                            .addModifiers(KModifier.SUSPEND)
-                            .addStatement(
-                                "val response = client.%M<String>(%S){",
-                                MemberName("", "get"),
-                                stat.endpoint.url
-                            )
-                            .addStatement("header(%S,%S)", firstHeader.name, firstHeader.default!!)
-                            .addStatement("parameter(%S,%S)", firstParameter.name, firstParameter.default!!)
-                            .addStatement("}")
-                            .addStatement("client.close()")
-                            .addStatement("return response")
-                            .returns(String::class)
-                            .build()
-                    )
-                    .build()
-            )
+            .addType(createClientClass("Client", stat.endpoint.url, firstHeader, firstParameter))
             .build()
 
         file.writeTo(System.out)
+    }
+
+    private fun createClientClass(
+        name: String,
+        endpoint: String,
+        header: AssObject.Variable.StringVar,
+        queryParams: AssObject.Variable.NumberVar
+    ): TypeSpec {
+        val ktorHttpClientClassName = ClassName("", "HttpClient")
+        return TypeSpec.classBuilder(name)
+            .primaryConstructor(
+                FunSpec.constructorBuilder()
+                    .addParameter("client", ktorHttpClientClassName)
+                    .build()
+            )
+            .addProperty(
+                PropertySpec.builder("client", ktorHttpClientClassName)
+                    .initializer("client")
+                    .addModifiers(KModifier.PRIVATE)
+                    .build()
+            )
+            .addFunction(
+                createCallFunction("getPosts", endpoint, header, queryParams)
+            )
+            .build()
+    }
+
+    private fun createCallFunction(
+        name: String,
+        url: String,
+        header: AssObject.Variable.StringVar,
+        queryParams: AssObject.Variable.NumberVar
+    ): FunSpec {
+        return FunSpec.builder(name)
+            .addModifiers(KModifier.SUSPEND)
+            .addStatement(
+                "val response = client.%M<String>(%S){",
+                MemberName("", "get"),
+                url
+            )
+            .addStatement("header(%S,%S)", header.name, header.default!!)
+            .addStatement("parameter(%S,%S)", queryParams.name, queryParams.default!!)
+            .addStatement("}")
+            .addStatement("client.close()")
+            .addStatement("return response")
+            .returns(String::class)
+            .build()
     }
 }
