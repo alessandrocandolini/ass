@@ -131,7 +131,7 @@ GET {
             "offset": String
         }
     }
-    responses {
+    response {
         200 {
             content {
                 [

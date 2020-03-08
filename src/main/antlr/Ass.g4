@@ -1,6 +1,22 @@
 grammar Ass;
 
-stat: (typeSpec)* EOF;
+stat: endpoint get? head? post? put? delete? patch? option? EOF;
+//TODO improve the url parser
+endpoint: 'endpoint:' STRING_VALUE ';';
+
+get: 'GET' '{' request response'}';
+head: 'HEAD' '{' request response '}';
+post: 'POST' '{' request response '}';
+put: 'PUT' '{' request response '}';
+delete: 'DELETE' '{' request response '}';
+patch: 'PATCH' '{' request response '}';
+option: 'OPTIONS' '{' request response '}';
+
+request: 'request' '{' headers? queries? '}';
+response: 'response' '{' responseCode+ '}';
+responseCode: NUMBER_VALUE '{' '}';
+headers : 'headers' '{' typeSpec* '}';
+queries: 'query' '{' typeSpec* '}';
 
 typeSpec: typeSpecString
  |typeSpecNumber

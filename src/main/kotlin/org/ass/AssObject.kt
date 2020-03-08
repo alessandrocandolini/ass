@@ -3,7 +3,18 @@ package org.ass
 sealed class AssObject {
 
     data class Stat(
-        val variables: List<Variable>
+        val endpoint: Endpoint,
+        val get: Method.Get?,
+        val head: Method.Head?,
+        val post: Method.Post?,
+        val put: Method.Put?,
+        val delete: Method.Delete?,
+        val patch: Method.Patch?,
+        val options: Method.Options?
+    ) : AssObject()
+
+    data class Endpoint(
+        val url: String
     ) : AssObject()
 
     sealed class Variable : AssObject() {
@@ -48,5 +59,59 @@ sealed class AssObject {
     data class DecimalValueList(
         val values: List<Double>
     ) : AssObject()
+
+    sealed class Method : AssObject() {
+
+        data class Get(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+        data class Head(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+        data class Post(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+        data class Put(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+        data class Delete(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+        data class Patch(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+        data class Options(
+            val request: Request,
+            val response: Response
+        ) : Method()
+
+    }
+
+    data class Request(
+        val headers: Headers?,
+        val queries: Queries?
+    ) : AssObject()
+
+    data class Headers(
+        val values: List<Variable>
+    ) : AssObject()
+
+    data class Queries(
+        val values: List<Variable>
+    ) : AssObject()
+
+    object Response : AssObject()
 
 }

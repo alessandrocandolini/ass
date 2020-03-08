@@ -7,8 +7,87 @@ import java.lang.IllegalArgumentException
 class AssVisitorImpl : AssBaseVisitor<AssObject>() {
 
     override fun visitStat(ctx: AssParser.StatContext): AssObject.Stat {
+        return AssObject.Stat(
+            visitEndpoint(ctx.endpoint()),
+            visitGet(ctx.get()),
+            visitHead(ctx.head()),
+            visitPost(ctx.post()),
+            visitPut(ctx.put()),
+            visitDelete(ctx.delete()),
+            visitPatch(ctx.patch()),
+            visitOption(ctx.option())
+        )
+    }
+
+    override fun visitEndpoint(ctx: AssParser.EndpointContext): AssObject.Endpoint {
+        //TODO this is pure shit
+        return AssObject.Endpoint(ctx.text.replace("\"", ""))
+    }
+
+    override fun visitGet(ctx: AssParser.GetContext): AssObject.Method.Get {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Get(request, response)
+    }
+
+    override fun visitHead(ctx: AssParser.HeadContext): AssObject.Method.Head {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Head(request, response)
+    }
+
+    override fun visitPost(ctx: AssParser.PostContext): AssObject.Method.Post {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Post(request, response)
+    }
+
+    override fun visitPut(ctx: AssParser.PutContext): AssObject.Method.Put {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Put(request, response)
+    }
+
+    override fun visitDelete(ctx: AssParser.DeleteContext): AssObject.Method.Delete {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Delete(request, response)
+    }
+
+    override fun visitPatch(ctx: AssParser.PatchContext): AssObject.Method.Patch {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Patch(request, response)
+    }
+
+    override fun visitOption(ctx: AssParser.OptionContext): AssObject.Method.Options {
+        val request = visitRequest(ctx.request())
+        val response = visitResponse(ctx.response())
+        return AssObject.Method.Options(request, response)
+    }
+
+    override fun visitRequest(ctx: AssParser.RequestContext): AssObject.Request {
+        val headers = visitHeaders(ctx.headers())
+        val query = visitQueries(ctx.queries())
+        return AssObject.Request(headers, query)
+    }
+
+    override fun visitResponse(ctx: AssParser.ResponseContext): AssObject.Response {
+        return AssObject.Response
+    }
+
+    override fun visitResponseCode(ctx: AssParser.ResponseCodeContext): AssObject {
+        return super.visitResponseCode(ctx)
+    }
+
+    override fun visitHeaders(ctx: AssParser.HeadersContext): AssObject.Headers {
         val variables = ctx.typeSpec().map { visitTypeSpec(it) }
-        return AssObject.Stat(variables)
+        return AssObject.Headers(variables)
+    }
+
+    override fun visitQueries(ctx: AssParser.QueriesContext): AssObject.Queries {
+        val variables = ctx.typeSpec().map { visitTypeSpec(it) }
+        return AssObject.Queries(variables)
     }
 
     override fun visitTypeSpec(ctx: AssParser.TypeSpecContext): AssObject.Variable {
