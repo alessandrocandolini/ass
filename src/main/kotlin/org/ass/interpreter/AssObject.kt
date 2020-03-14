@@ -1,4 +1,4 @@
-package org.ass
+package org.ass.interpreter
 
 sealed class AssObject {
 

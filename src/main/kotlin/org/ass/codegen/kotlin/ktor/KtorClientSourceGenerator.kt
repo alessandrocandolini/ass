@@ -1,10 +1,12 @@
-package org.ass
+package org.ass.codegen.kotlin.ktor
 
-import AssLexer
-import AssParser
 import com.squareup.kotlinpoet.*
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import org.ass.interpreter.AssObject
+import org.ass.interpreter.AssVisitorImpl
+import org.ass.parser.AssLexer
+import org.ass.parser.AssParser
 
 val TEMPLATE = """
     endpoint: "https://jsonplaceholder.typicode.com/posts";

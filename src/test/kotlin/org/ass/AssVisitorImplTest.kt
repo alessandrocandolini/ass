@@ -6,6 +6,8 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import org.ass.interpreter.AssObject
+import org.ass.interpreter.AssVisitorImpl
 
 class AssVisitorImplTest : FunSpec({
 

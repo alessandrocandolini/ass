@@ -12,7 +12,16 @@ repositories {
 
 generateGrammarSource {
     maxHeapSize = "64m"
-    arguments += ["-visitor", "-long-messages"]
+    arguments += ["-visitor", "-long-messages", "-package", "org.ass.parser"]
+
+    doLast {
+        copy {
+            from 'build/generated-src/antlr/main/'
+            include '*.*'
+            into 'build/generated-src/antlr/main/org/ass/parser'
+        }
+        project.delete fileTree('build/generated-src/antlr/main').include('*.*')
+    }
 }
 
 dependencies {

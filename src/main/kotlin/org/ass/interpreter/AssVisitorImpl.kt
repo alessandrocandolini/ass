@@ -1,7 +1,7 @@
-package org.ass
+package org.ass.interpreter
 
-import AssBaseVisitor
-import AssParser
+import org.ass.parser.AssBaseVisitor
+import org.ass.parser.AssParser
 import java.lang.IllegalArgumentException
 
 class AssVisitorImpl : AssBaseVisitor<AssObject>() {
